@@ -1,7 +1,7 @@
 {
-  "name": "vite-react-ts-minimal-template",
+  "name": "star-wars-db",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -13,6 +13,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
