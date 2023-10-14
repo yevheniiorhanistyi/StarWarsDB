@@ -1,0 +1,22 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  max-width: 500px;
+
+  &__link {
+    font-size: 1rem;
+    color: #b5b7b7;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: color 0.2s linear;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
