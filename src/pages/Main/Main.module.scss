@@ -1,0 +1,40 @@
+@import '../../scss/keyframes/keyframes.scss';
+
+.main {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: calc(100vh - 218px);
+  position: relative;
+  overflow: hidden;
+}
+
+.main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('../../assets/background.webp') no-repeat center;
+  background-size: cover;
+  transform: scale(1.5);
+  animation: backgroundAnimation 30s linear forwards;
+  z-index: 1;
+}
+
+.main__loading {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
