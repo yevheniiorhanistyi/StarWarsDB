@@ -6,6 +6,10 @@
 
   flex: 0 0 auto;
 
+  @media (max-width: 620px) {
+    height: 260px;
+  }
+
   &__logo {
     width: 180px;
     height: auto;
