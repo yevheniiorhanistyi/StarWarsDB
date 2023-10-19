@@ -1,7 +1,8 @@
-import { Component } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
-import { IMainState } from '../../types/types';
+import { ICharData } from '../../types/types';
 import { getFromLocalStorage, saveToLocalStorage } from '../../utils/localStorage';
+
 import ApiService from '../../services/apiService';
 import Search from '../../components/Search/Search';
 import CharList from '../../components/CharList/CharList';
@@ -10,72 +11,59 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 
 import styles from './Main.module.scss';
 
-class Main extends Component<Record<string, boolean>, IMainState> {
-  apiService = new ApiService();
+const Main: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [inputValue, setInputValue] = useState(getFromLocalStorage('searchValue') || '');
+  const [charList, setCharList] = useState<ICharData[]>([]);
+  const apiService = useMemo(() => new ApiService(), []);
 
-  constructor(props: Record<string, boolean>) {
-    super(props);
+  const loadData = useCallback(
+    async (value: string) => {
+      try {
+        setLoading(true);
+        const res = await apiService.getAllCharacters(value);
+        setCharList(res.results);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setCharList, setLoading, apiService],
+  );
 
-    this.state = {
-      loading: true,
-      inputValue: getFromLocalStorage('searchValue') || '',
-      charList: [],
-    };
-  }
+  useEffect(() => {
+    loadData(inputValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  async componentDidMount() {
-    const { inputValue } = this.state;
-    this.loadData(inputValue);
-  }
-
-  loadData = async (inputValue: string) => {
-    try {
-      this.setState({ loading: true });
-      const res = await this.apiService.getAllCharacters(inputValue);
-      this.setState({ charList: res.results });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    } finally {
-      this.setState({ loading: false });
-    }
-  };
-
-  handleSearchInputChange = (newValue: string) => {
-    this.setState({ inputValue: newValue });
+  const handleSearchInputChange = (newValue: string) => {
+    setInputValue(newValue);
     saveToLocalStorage('searchValue', newValue);
   };
 
-  handleSubmit = async () => {
-    const { inputValue } = this.state;
-    this.loadData(inputValue);
+  const handleSubmit = async () => {
+    loadData(inputValue);
   };
 
-  render() {
-    const { inputValue, charList, loading } = this.state;
-    const mainClass = loading ? `${styles.main} ${styles.main__loading}` : styles.main;
+  const mainClass = loading ? `${styles.main} ${styles.main__loading}` : styles.main;
 
-    return (
-      <main className={mainClass}>
-        <div className={styles.wrapper}>
-          {loading ? (
-            <Spinner />
-          ) : (
-            <div className={styles.container}>
-              <Search
-                value={inputValue}
-                onSearchChange={this.handleSearchInputChange}
-                handleSubmit={this.handleSubmit}
-              />
-              <ErrorBoundary>
-                <CharList data={charList} />
-              </ErrorBoundary>
-            </div>
-          )}
-        </div>
-      </main>
-    );
-  }
-}
+  return (
+    <main className={mainClass}>
+      <div className={styles.wrapper}>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div className={styles.container}>
+            <Search value={inputValue} onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
+            <ErrorBoundary>
+              <CharList data={charList} />
+            </ErrorBoundary>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+};
 
 export default Main;
