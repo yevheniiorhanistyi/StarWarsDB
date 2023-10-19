@@ -20,7 +20,7 @@ class ErrorBoundary extends Component<Props, State> {
     const { children } = this.props;
     const { hasError } = this.state;
     if (hasError) {
-      return <h3 className={styles.error}>Error, error, an error we have! Seek immediate help, we must!</h3>;
+      return <h3 className={styles.error}>Something went wrong...</h3>;
     }
 
     return children;
