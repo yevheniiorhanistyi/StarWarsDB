@@ -52,7 +52,6 @@ class Main extends Component<Record<string, boolean>, IMainState> {
   };
 
   render() {
-    const { hasError } = this.props;
     const { inputValue, charList, loading } = this.state;
     const mainClass = loading ? `${styles.main} ${styles.main__loading}` : styles.main;
 
@@ -69,7 +68,7 @@ class Main extends Component<Record<string, boolean>, IMainState> {
                 handleSubmit={this.handleSubmit}
               />
               <ErrorBoundary>
-                <CharList hasError={hasError} data={charList} />
+                <CharList data={charList} />
               </ErrorBoundary>
             </div>
           )}

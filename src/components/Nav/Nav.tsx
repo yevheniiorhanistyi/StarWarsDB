@@ -1,7 +1,5 @@
 import { Component } from 'react';
 
-import { ICommonProps } from '../../types/types';
-
 import styles from './Nav.module.scss';
 
 const navLinks = [
@@ -13,10 +11,8 @@ const navLinks = [
   { label: 'Planets', href: '/' },
 ];
 
-class Nav extends Component<ICommonProps> {
+class Nav extends Component {
   render() {
-    const { hasError, triggerError } = this.props;
-    const btnTriggerErrorClass = hasError ? styles.error : `${styles.error} ${styles.blink}`;
     return (
       <nav className={styles.nav}>
         {navLinks.map((link) => (
@@ -24,9 +20,6 @@ class Nav extends Component<ICommonProps> {
             {link.label}
           </a>
         ))}
-        <button onClick={triggerError} className={btnTriggerErrorClass} type="button">
-          Generate Error
-        </button>
       </nav>
     );
   }

@@ -17,11 +17,7 @@ class CharList extends Component<ICharListProps> {
   }
 
   render() {
-    const { hasError, data } = this.props;
-
-    if (hasError) {
-      throw new Error('This is a deliberate error for testing.');
-    }
+    const { data } = this.props;
 
     if (data.length === 0) {
       return (
