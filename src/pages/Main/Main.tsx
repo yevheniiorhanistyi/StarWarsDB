@@ -6,6 +6,7 @@ import ApiService from '../../services/apiService';
 import Search from '../../components/Search/Search';
 import CharList from '../../components/CharList/CharList';
 import Spinner from '../../components/Spinner/Spinner';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 
 import styles from './Main.module.scss';
 
@@ -31,10 +32,12 @@ class Main extends Component<Record<string, never>, IMainState> {
     try {
       this.setState({ loading: true });
       const res = await this.apiService.getAllCharacters(inputValue);
-      this.setState({ charList: res.results, loading: false });
+      this.setState({ charList: res.results });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+    } finally {
+      this.setState({ loading: false });
     }
   };
 
@@ -64,7 +67,9 @@ class Main extends Component<Record<string, never>, IMainState> {
                 onSearchChange={this.handleSearchInputChange}
                 handleSubmit={this.handleSubmit}
               />
-              <CharList data={charList} />
+              <ErrorBoundary>
+                <CharList data={charList} />
+              </ErrorBoundary>
             </div>
           )}
         </div>
