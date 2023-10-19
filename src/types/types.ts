@@ -8,12 +8,6 @@ export interface State {
   hasError: boolean;
 }
 
-export interface IMainState {
-  loading: boolean;
-  inputValue: string;
-  charList: ICharData[] | [];
-}
-
 export interface ISearchProps {
   value: string;
   onSearchChange: (newValue: string) => void;
