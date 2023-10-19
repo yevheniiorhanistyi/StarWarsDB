@@ -10,10 +10,10 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 
 import styles from './Main.module.scss';
 
-class Main extends Component<Record<string, never>, IMainState> {
+class Main extends Component<Record<string, boolean>, IMainState> {
   apiService = new ApiService();
 
-  constructor(props: Record<string, never>) {
+  constructor(props: Record<string, boolean>) {
     super(props);
 
     this.state = {
@@ -52,6 +52,7 @@ class Main extends Component<Record<string, never>, IMainState> {
   };
 
   render() {
+    const { hasError } = this.props;
     const { inputValue, charList, loading } = this.state;
     const mainClass = loading ? `${styles.main} ${styles.main__loading}` : styles.main;
 
@@ -68,7 +69,7 @@ class Main extends Component<Record<string, never>, IMainState> {
                 handleSubmit={this.handleSubmit}
               />
               <ErrorBoundary>
-                <CharList data={charList} />
+                <CharList hasError={hasError} data={charList} />
               </ErrorBoundary>
             </div>
           )}

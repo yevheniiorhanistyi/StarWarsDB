@@ -8,6 +8,11 @@ export interface State {
   hasError: boolean;
 }
 
+export interface ICommonProps {
+  hasError: boolean;
+  triggerError: () => void;
+}
+
 export interface IMainState {
   loading: boolean;
   inputValue: string;
