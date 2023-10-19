@@ -1,3 +1,13 @@
+import { ReactNode } from 'react';
+
+export interface Props {
+  children?: ReactNode;
+}
+
+export interface State {
+  hasError: boolean;
+}
+
 export interface IMainState {
   loading: boolean;
   inputValue: string;
@@ -11,6 +21,7 @@ export interface ISearchProps {
 }
 
 export interface ICharListProps {
+  hasError: boolean;
   data: ICharData[] | [];
 }
 
