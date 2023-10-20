@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import styles from './Nav.module.scss';
 
 const navLinks = [
@@ -12,9 +14,9 @@ const navLinks = [
 const Nav: React.FC = () => (
   <nav className={styles.nav}>
     {navLinks.map((link) => (
-      <a key={link.label} className={styles.nav__link} href={link.href}>
+      <Link key={link.label} className={styles.nav__link} to={link.href}>
         {link.label}
-      </a>
+      </Link>
     ))}
   </nav>
 );
