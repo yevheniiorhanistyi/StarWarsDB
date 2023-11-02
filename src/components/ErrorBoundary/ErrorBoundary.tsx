@@ -1,8 +1,7 @@
 import { Component, ErrorInfo } from 'react';
 
 import { Props, State } from '../../types/types';
-
-import styles from './ErrorBoundary.module.scss';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
@@ -20,7 +19,7 @@ class ErrorBoundary extends Component<Props, State> {
     const { children } = this.props;
     const { hasError } = this.state;
     if (hasError) {
-      return <h3 className={styles.error}>Something went wrong...</h3>;
+      return <ErrorMessage />;
     }
 
     return children;
