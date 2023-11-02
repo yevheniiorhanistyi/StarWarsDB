@@ -1,7 +1,12 @@
 @import '../../scss/keyframes/keyframes.scss';
 
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  min-height: calc(100vh - 218px);
   max-width: 1200px;
   text-align: center;
   margin: 0 auto;
@@ -11,6 +16,7 @@
   display: inline-block;
   width: 80px;
   height: 80px;
+  z-index: 1000;
 }
 
 .spinner:after {
