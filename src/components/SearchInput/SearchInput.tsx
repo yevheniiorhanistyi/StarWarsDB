@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 
-import { ISearchProps } from '../../types/types';
+import { ISearchInputProps } from '../../types/types';
 
-import styles from './Search.module.scss';
+import styles from './SearchInput.module.scss';
 
-const Search: React.FC<ISearchProps> = ({ value, handleSubmit, onSearchChange }) => {
+const SearchInput: React.FC<ISearchInputProps> = ({ value, handleSubmit, onSearchChange }) => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     onSearchChange(inputValue);
@@ -33,4 +33,4 @@ const Search: React.FC<ISearchProps> = ({ value, handleSubmit, onSearchChange })
   );
 };
 
-export default Search;
+export default SearchInput;
