@@ -1,0 +1,56 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 20px auto;
+}
+
+.button {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 50%;
+  background-color: #000;
+  transition: background-color 0.2s linear, transform 0.2s linear, color 0.2s linear;
+  cursor: pointer;
+
+  @media (max-width: '520px') {
+    font-size: 0.7rem;
+    width: 30px;
+    height: 30px;
+    margin: 0 3px;
+  }
+
+  &:hover {
+    color: #000;
+    background-color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: #999;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+}
+
+.dots {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 5px;
+}
+
+.active {
+  color: #000;
+  background-color: #fff;
+}
