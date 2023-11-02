@@ -8,7 +8,7 @@ export interface State {
   hasError: boolean;
 }
 
-export interface ISearchProps {
+export interface ISearchInputProps {
   value: string;
   onSearchChange: (newValue: string) => void;
   handleSubmit: () => void;
@@ -16,12 +16,18 @@ export interface ISearchProps {
 
 export interface ICharListProps {
   data: ICharData[] | [];
+  openInfo: (charNumber: number) => void;
+}
+
+export interface ICharInfoProps {
+  charData: ICharData;
+  imgSrc: string;
 }
 
 export interface IResourceResponse {
   count: number;
   next: string | null;
-  previus: string | null;
+  previous: string | null;
   results: ICharData[];
 }
 
@@ -42,4 +48,17 @@ export interface ICharData {
   created: Date;
   edited: Date;
   url: string;
+}
+
+export interface IUsePaginationProps {
+  totalCount: number;
+  currentPage: number;
+  pageSize?: number;
+  siblingCount?: number;
+}
+
+export interface IPaginationProps {
+  totalCount: number;
+  currentPage: number;
+  onPageChange: (value: number) => void;
 }
