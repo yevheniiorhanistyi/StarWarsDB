@@ -16,7 +16,10 @@
   border: none;
   border-radius: 50%;
   background-color: #000;
-  transition: background-color 0.2s linear, transform 0.2s linear, color 0.2s linear;
+  transition:
+    background-color 0.2s linear,
+    transform 0.2s linear,
+    color 0.2s linear;
   cursor: pointer;
 
   @media (max-width: '520px') {

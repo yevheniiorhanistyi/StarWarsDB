@@ -62,7 +62,9 @@
   border-radius: 24px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s linear, transform 0.2s linear;
+  transition:
+    background-color 0.2s linear,
+    transform 0.2s linear;
   margin: 13px auto 20px;
 }
 
