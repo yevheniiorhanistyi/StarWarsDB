@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { SetURLSearchParams } from 'react-router-dom';
 
 export interface Props {
   children?: ReactNode;
@@ -62,3 +63,5 @@ export interface IPaginationProps {
   currentPage: number;
   onPageChange: (value: number) => void;
 }
+
+export type ContextType = { frontPage: string; charId: string; setSearchParams: SetURLSearchParams };

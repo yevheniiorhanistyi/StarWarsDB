@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { initialCharData } from '../../constats/constats';
-import { ICharData } from '../../types/types';
+import { ICharData, ContextType } from '../../types/types';
 import { getCharacterImage, setContent } from '../../utils';
 
 import useApiService from '../../services/apiService';
@@ -11,9 +11,7 @@ import styles from './AdditionalInfo.module.scss';
 
 const AdditionalInfo: React.FC = () => {
   const [charData, setCharData] = useState<ICharData>(initialCharData);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const frontPage = searchParams.get('frontpage') || '1';
-  const charID = searchParams.get('details') || '';
+  const { frontPage, charId, setSearchParams } = useOutletContext<ContextType>();
   const { getCharacter, process, setProcess } = useApiService();
 
   const onRequest = async (value: string) => {
@@ -26,12 +24,12 @@ const AdditionalInfo: React.FC = () => {
   };
 
   useEffect(() => {
-    onRequest(charID);
+    onRequest(charId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [charID]);
+  }, [charId]);
 
   const handleCloseInfo = () => {
-    setSearchParams(`frontpage=${frontPage}`);
+    setSearchParams(`page=${frontPage}`);
   };
 
   const elements = useMemo(
@@ -60,7 +58,7 @@ const AdditionalInfo: React.FC = () => {
     [process],
   );
 
-  if (!charID) return null;
+  if (!charId) return null;
 
   return <div>{elements}</div>;
 };

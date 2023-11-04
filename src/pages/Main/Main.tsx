@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
-import { ICharData } from '../../types/types';
+import { ICharData, ContextType } from '../../types/types';
 import { getFromLocalStorage, saveToLocalStorage, setContent } from '../../utils';
 
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
@@ -19,8 +19,8 @@ const Main: React.FC = () => {
   const [charList, setCharList] = useState<ICharData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
-  const frontPage = searchParams.get('frontpage') || '1';
-  const charID = searchParams.get('details') || '';
+  const frontPage = searchParams.get('page') || '1';
+  const charId = searchParams.get('details') || '';
 
   const { getAllCharacters, process, setProcess } = useApiService();
 
@@ -30,11 +30,11 @@ const Main: React.FC = () => {
   };
 
   const openInfo = (charNumber: number) => {
-    setSearchParams(`frontpage=${frontPage}&details=${charNumber}`);
+    setSearchParams(`page=${frontPage}&details=${charNumber}`);
   };
 
   const closeInfo = () => {
-    setSearchParams(`frontpage=${frontPage}`);
+    setSearchParams(`page=${frontPage}`);
   };
 
   const onRequest = async (value: string, page: string) => {
@@ -48,18 +48,18 @@ const Main: React.FC = () => {
 
   const handleSubmit = async () => {
     onRequest(inputValue, '1');
-    setSearchParams('frontpage=1');
+    setSearchParams('page=1');
   };
 
   const onPageChange = (value: number) => {
-    setSearchParams(`frontpage=${value}`);
+    setSearchParams(`page=${value}`);
   };
 
   useEffect(() => {
     const totalPageCount = Math.ceil(totalCount / 10);
     if (inputValue !== '' && totalPageCount < Number(frontPage)) {
       onRequest(inputValue, '1');
-      setSearchParams('frontpage=1');
+      setSearchParams('page=1');
     } else {
       onRequest(inputValue, frontPage);
     }
@@ -77,19 +77,19 @@ const Main: React.FC = () => {
               <SearchInput value={inputValue} onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
               <CharList data={charList} openInfo={openInfo} />
               <Pagination totalCount={totalCount} currentPage={Number(frontPage)} onPageChange={onPageChange} />
-              {charID && <div className={styles.backdrop} onClick={() => closeInfo()} role="button" tabIndex={0} />}
+              {charId && <div className={styles.backdrop} onClick={closeInfo} role="button" tabIndex={0} />}
             </div>
           </ErrorBoundary>
           <ErrorBoundary>
-            <Outlet />
+            <Outlet context={{ frontPage, charId, setSearchParams } satisfies ContextType} />
           </ErrorBoundary>
         </>,
       ),
     // eslint-disable-next-line
-    [process, inputValue, charID],
+    [process, inputValue, charId],
   );
 
-  const wrapperClass = charID ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
+  const wrapperClass = charId ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
   return (
     <main className={styles.main}>
       <div className={styles.container}>
