@@ -64,4 +64,4 @@ export interface IPaginationProps {
   onPageChange: (value: number) => void;
 }
 
-export type ContextType = { frontPage: string; charId: string; setSearchParams: SetURLSearchParams };
+export type ContextType = { frontPage: number; charId: string; setSearchParams: SetURLSearchParams };

@@ -6,7 +6,7 @@ const useApiService = () => {
 
   const apiBase = 'https://swapi.dev/api/';
 
-  const getAllCharacters = async (endpoint: string, page: string): Promise<IResourceResponse> => {
+  const getAllCharacters = async (endpoint: string, page: number): Promise<IResourceResponse> => {
     const response: Promise<IResourceResponse> = await request(`${apiBase}people/?search=${endpoint}&page=${page}`);
     return response;
   };

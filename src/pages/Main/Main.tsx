@@ -19,7 +19,7 @@ const Main: React.FC = () => {
   const [charList, setCharList] = useState<ICharData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
-  const frontPage = searchParams.get('page') || '1';
+  const frontPage = parseInt(searchParams.get('page') || '1', 10);
   const charId = searchParams.get('details') || '';
 
   const { getAllCharacters, process, setProcess } = useApiService();
@@ -37,7 +37,7 @@ const Main: React.FC = () => {
     setSearchParams(`page=${frontPage}`);
   };
 
-  const onRequest = async (value: string, page: string) => {
+  const onRequest = async (value: string, page: number) => {
     getAllCharacters(value, page).then((res) => {
       setCharList(res.results);
       setTotalCount(res.count);
@@ -47,7 +47,7 @@ const Main: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    onRequest(inputValue, '1');
+    onRequest(inputValue, 1);
     setSearchParams('page=1');
   };
 
@@ -57,8 +57,9 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     const totalPageCount = Math.ceil(totalCount / 10);
+
     if (inputValue !== '' && totalPageCount < Number(frontPage)) {
-      onRequest(inputValue, '1');
+      onRequest(inputValue, 1);
       setSearchParams('page=1');
     } else {
       onRequest(inputValue, frontPage);
