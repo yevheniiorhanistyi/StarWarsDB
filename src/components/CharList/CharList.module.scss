@@ -1,0 +1,118 @@
+.char {
+  &__list {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  &__item {
+    position: relative;
+    width: 250px;
+    height: 350px;
+    background-color: transparent;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: 0.3s transform;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 180%;
+      width: 75%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: skew(45deg);
+      opacity: 0.7;
+      z-index: 1;
+      pointer-events: none;
+      transition: 0.5s;
+    }
+
+    &:hover {
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+      transform: translateY(-10px);
+    }
+
+    &:hover::before {
+      left: -180%;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+
+    &:hover .char__description {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__img {
+    width: 260px;
+    height: 350px;
+    object-fit: cover;
+    transform: translate(-15px, -15px);
+    transition: 2s;
+  }
+
+  &__description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 5px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    opacity: 0;
+    z-index: 2;
+    transform: translateY(10px);
+    transition: all 0.2s linear;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+    margin: 0 0 8px;
+  }
+
+  &__attribute {
+    text-align: center;
+    letter-spacing: 3px;
+    line-height: 1.2;
+    color: #fff;
+    margin: 0;
+  }
+
+  &__empty {
+    width: 100%;
+    max-width: 860px;
+    height: 100%;
+    max-height: 550px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__empty img {
+    display: block;
+    width: 350px;
+  }
+
+  &__empty h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    margin: 60px 0;
+  }
+}
