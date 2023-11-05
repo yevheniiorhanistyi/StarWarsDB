@@ -88,20 +88,6 @@
     margin: 0 0 8px;
   }
 
-  &__attribute {
-    display: none;
-    font-size: 1rem;
-    text-align: center;
-    letter-spacing: 3px;
-    line-height: 1.2;
-    color: #fff;
-    margin: 0;
-
-    @media (max-width: 910px) {
-      display: block;
-    }
-  }
-
   &__empty {
     width: 100%;
     max-width: 860px;

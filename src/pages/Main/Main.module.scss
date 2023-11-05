@@ -36,6 +36,11 @@
   grid-template-rows: 1fr;
   column-gap: 15px;
   justify-content: center;
+
+  @media (max-width: '910px') {
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }
 
 .leftColumn {

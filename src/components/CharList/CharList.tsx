@@ -34,12 +34,6 @@ const CharList: React.FC<ICharListProps> = ({ data, openInfo }) => {
             <img className={styles.char__img} src={getCharacterImage(char)} alt={char.name} />
             <div className={styles.char__description}>
               <h4 className={styles.char__title}>{char.name}</h4>
-              <p className={styles.char__attribute}>{`Height: ${char.height}`}</p>
-              <p className={styles.char__attribute}>{`Weigth: ${char.mass}`}</p>
-              <p className={styles.char__attribute}>{`Hair Color: ${char.hair_color}`}</p>
-              <p className={styles.char__attribute}>{`Skin Color: ${char.skin_color}`}</p>
-              <p className={styles.char__attribute}>{`Eye Color: ${char.eye_color}`}</p>
-              <p className={styles.char__attribute}>{`Gender: ${char.gender}`}</p>
             </div>
           </button>
         </li>
