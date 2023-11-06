@@ -1,10 +1,11 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
 import { ContextType } from '../../types/types';
 import { useCharListData } from '../../components/CharListDataProvider/CharListDataProvider';
-import { getFromLocalStorage, saveToLocalStorage, setContent } from '../../utils';
+import { useSearchInput } from '../../components/SearchInputProvider/SearchInputProvider';
+import { saveToLocalStorage, setContent } from '../../utils';
 
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CharList from '../../components/CharList/CharList';
@@ -16,7 +17,7 @@ import useApiService from '../../services/apiService';
 import styles from './Main.module.scss';
 
 const Main: React.FC = () => {
-  const [inputValue, setInputValue] = useState(getFromLocalStorage('searchValue') || '');
+  const { inputValue, setInputValue } = useSearchInput();
   const { totalCount, setCharListData, setTotalCount } = useCharListData();
   const [searchParams, setSearchParams] = useSearchParams();
   const frontPage = parseInt(searchParams.get('page') || '1', 10);
@@ -75,7 +76,7 @@ const Main: React.FC = () => {
         <>
           <ErrorBoundary>
             <div className={styles.leftColumn}>
-              <SearchInput value={inputValue} onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
+              <SearchInput onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
               <CharList openInfo={openInfo} />
               <Pagination currentPage={Number(frontPage)} onPageChange={onPageChange} />
               {charId && <div className={styles.backdrop} onClick={closeInfo} role="button" tabIndex={0} />}

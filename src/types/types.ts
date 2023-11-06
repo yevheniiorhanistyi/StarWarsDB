@@ -10,7 +10,6 @@ export interface State {
 }
 
 export interface ISearchInputProps {
-  value: string;
   onSearchChange: (newValue: string) => void;
   handleSubmit: () => void;
 }
