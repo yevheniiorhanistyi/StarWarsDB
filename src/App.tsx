@@ -1,12 +1,13 @@
 import { RouterProvider } from 'react-router-dom';
+import { CharListDataProvider } from './components/CharListDataProvider/CharListDataProvider';
 
 import router from './routes/router';
 
 function App() {
   return (
-    <div className="App">
+    <CharListDataProvider>
       <RouterProvider router={router} />
-    </div>
+    </CharListDataProvider>
   );
 }
 
