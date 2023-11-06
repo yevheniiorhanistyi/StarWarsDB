@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
-import { ICharData, ContextType } from '../../types/types';
+import { ContextType } from '../../types/types';
+import { useCharListData } from '../../components/CharListDataProvider/CharListDataProvider';
 import { getFromLocalStorage, saveToLocalStorage, setContent } from '../../utils';
 
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
@@ -16,8 +17,7 @@ import styles from './Main.module.scss';
 
 const Main: React.FC = () => {
   const [inputValue, setInputValue] = useState(getFromLocalStorage('searchValue') || '');
-  const [charList, setCharList] = useState<ICharData[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const { totalCount, setCharListData, setTotalCount } = useCharListData();
   const [searchParams, setSearchParams] = useSearchParams();
   const frontPage = parseInt(searchParams.get('page') || '1', 10);
   const charId = searchParams.get('details') || '';
@@ -39,7 +39,7 @@ const Main: React.FC = () => {
 
   const onRequest = async (value: string, page: number) => {
     getAllCharacters(value, page).then((res) => {
-      setCharList(res.results);
+      setCharListData(res.results);
       setTotalCount(res.count);
       setProcess('confirmed');
     });
@@ -76,8 +76,8 @@ const Main: React.FC = () => {
           <ErrorBoundary>
             <div className={styles.leftColumn}>
               <SearchInput value={inputValue} onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
-              <CharList data={charList} openInfo={openInfo} />
-              <Pagination totalCount={totalCount} currentPage={Number(frontPage)} onPageChange={onPageChange} />
+              <CharList openInfo={openInfo} />
+              <Pagination currentPage={Number(frontPage)} onPageChange={onPageChange} />
               {charId && <div className={styles.backdrop} onClick={closeInfo} role="button" tabIndex={0} />}
             </div>
           </ErrorBoundary>
