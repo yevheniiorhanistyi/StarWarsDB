@@ -4,7 +4,6 @@ import { getFromLocalStorage } from '../../utils';
 interface ISearchInputProvider {
   children: ReactNode;
 }
-
 export const SearchInputContext = createContext<{
   inputValue: string;
   setInputValue: (value: string) => void;

@@ -4,7 +4,6 @@ import { ICharData } from '../../types/types';
 interface ICharListDataProvider {
   children: ReactNode;
 }
-
 export const CharListDataContext = createContext<{
   charListData: ICharData[];
   totalCount: number;
