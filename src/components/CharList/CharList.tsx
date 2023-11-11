@@ -28,6 +28,7 @@ const CharList: React.FC<ICharListProps> = ({ openInfo }) => {
           <button
             className={styles.char__button}
             type="button"
+            data-testid={char.name}
             onClick={() => {
               onOpenInfo(char);
             }}

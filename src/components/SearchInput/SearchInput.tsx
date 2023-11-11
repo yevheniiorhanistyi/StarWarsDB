@@ -27,7 +27,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({ handleSubmit, onSearchChange
           value={inputValue}
           onChange={handleInputChange}
         />
-        <button type="submit" className={styles.search__icon}>
+        <button type="submit" name="submit" className={styles.search__icon}>
           <span className={styles.search__span} />
         </button>
       </div>

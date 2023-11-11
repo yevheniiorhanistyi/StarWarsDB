@@ -79,7 +79,15 @@ const Main: React.FC = () => {
               <SearchInput onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
               <CharList openInfo={openInfo} />
               <Pagination currentPage={Number(frontPage)} onPageChange={onPageChange} />
-              {charId && <div className={styles.backdrop} onClick={closeInfo} role="button" tabIndex={0} />}
+              {charId && (
+                <div
+                  className={styles.backdrop}
+                  onClick={closeInfo}
+                  role="button"
+                  tabIndex={0}
+                  data-testid="backdrop"
+                />
+              )}
             </div>
           </ErrorBoundary>
           <ErrorBoundary>
