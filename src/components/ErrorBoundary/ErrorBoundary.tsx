@@ -1,4 +1,4 @@
-import { Component, ErrorInfo } from 'react';
+import { Component } from 'react';
 
 import { Props, State } from '../../types/types';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -9,9 +9,7 @@ class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // eslint-disable-next-line no-console
-    console.error('ErrorBoundary caught an error: ', error, errorInfo);
+  public componentDidCatch() {
     this.setState({ hasError: true });
   }
 
