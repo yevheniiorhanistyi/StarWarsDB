@@ -1,5 +1,5 @@
 import { ICharData } from '../types/types';
-import { getNumberFromString } from './getCharacterNumber';
+import { getNumberFromString } from './getNumberFromString';
 
 export const getCharacterImage = (char: ICharData) => {
   const number = getNumberFromString(char.url);

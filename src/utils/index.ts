@@ -1,4 +1,4 @@
 export * from './getCharacterImage';
-export * from './getCharacterNumber';
+export * from './getNumberFromString';
 export * from './localStorage';
 export * from './setContent';
