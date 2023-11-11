@@ -5,7 +5,7 @@ interface ICharListDataProvider {
   children: ReactNode;
 }
 
-const CharListDataContext = createContext<{
+export const CharListDataContext = createContext<{
   charListData: ICharData[];
   totalCount: number;
   setCharListData: (data: ICharData[]) => void;

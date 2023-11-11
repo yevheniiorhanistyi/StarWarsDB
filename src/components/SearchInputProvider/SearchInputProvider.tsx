@@ -5,7 +5,7 @@ interface ISearchInputProvider {
   children: ReactNode;
 }
 
-const SearchInputContext = createContext<{
+export const SearchInputContext = createContext<{
   inputValue: string;
   setInputValue: (value: string) => void;
 }>({
