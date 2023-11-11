@@ -9,7 +9,7 @@
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "fix": "prettier \"src/**/*.{js,jsx,ts,tsx,css,scss}\" --write",
     "compile": "tsc",
-    "test": "vitest",
+    "test": "vitest --run",
     "coverage": "vitest run --coverage.all",
     "preview": "vite preview",
     "prepare": "husky install"
