@@ -1,18 +1,28 @@
+import { useHttp } from '../hooks/http.hook';
 import { IResourceResponse } from '../types/types';
 
-class ApiService {
-  getResource = async (url: string): Promise<IResourceResponse> => {
-    const res = await fetch(url);
+const useApiService = () => {
+  const { request, clearError, process, setProcess } = useHttp();
 
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-    }
-    return res.json();
+  const apiBase = 'https://swapi.dev/api/';
+
+  const getAllCharacters = async (endpoint: string, page: number): Promise<IResourceResponse> => {
+    const response: Promise<IResourceResponse> = await request(`${apiBase}people/?search=${endpoint}&page=${page}`);
+    return response;
   };
 
-  getAllCharacters = (endpoint: string) => this.getResource(`https://swapi.dev/api/people/?search=${endpoint}`);
+  const getCharacter = async (id: string) => {
+    const response = await request(`${apiBase}people/${id}`);
+    return response;
+  };
 
-  getCharacter = (id: string) => this.getResource(`https://swapi.dev/api/people/${id}`);
-}
+  return {
+    getAllCharacters,
+    getCharacter,
+    clearError,
+    process,
+    setProcess,
+  };
+};
 
-export default ApiService;
+export default useApiService;

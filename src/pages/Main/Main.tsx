@@ -1,82 +1,103 @@
-import { Component } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { Outlet } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
-import { IMainState } from '../../types/types';
-import { getFromLocalStorage, saveToLocalStorage } from '../../utils/localStorage';
-import ApiService from '../../services/apiService';
-import Search from '../../components/Search/Search';
-import CharList from '../../components/CharList/CharList';
-import Spinner from '../../components/Spinner/Spinner';
+import { ICharData, ContextType } from '../../types/types';
+import { getFromLocalStorage, saveToLocalStorage, setContent } from '../../utils';
+
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
+import CharList from '../../components/CharList/CharList';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import Pagination from '../../components/Pagination/Pagination';
+
+import useApiService from '../../services/apiService';
 
 import styles from './Main.module.scss';
 
-class Main extends Component<Record<string, boolean>, IMainState> {
-  apiService = new ApiService();
+const Main: React.FC = () => {
+  const [inputValue, setInputValue] = useState(getFromLocalStorage('searchValue') || '');
+  const [charList, setCharList] = useState<ICharData[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const frontPage = parseInt(searchParams.get('page') || '1', 10);
+  const charId = searchParams.get('details') || '';
 
-  constructor(props: Record<string, boolean>) {
-    super(props);
+  const { getAllCharacters, process, setProcess } = useApiService();
 
-    this.state = {
-      loading: true,
-      inputValue: getFromLocalStorage('searchValue') || '',
-      charList: [],
-    };
-  }
-
-  async componentDidMount() {
-    const { inputValue } = this.state;
-    this.loadData(inputValue);
-  }
-
-  loadData = async (inputValue: string) => {
-    try {
-      this.setState({ loading: true });
-      const res = await this.apiService.getAllCharacters(inputValue);
-      this.setState({ charList: res.results });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    } finally {
-      this.setState({ loading: false });
-    }
-  };
-
-  handleSearchInputChange = (newValue: string) => {
-    this.setState({ inputValue: newValue });
+  const handleSearchInputChange = (newValue: string) => {
+    setInputValue(newValue);
     saveToLocalStorage('searchValue', newValue);
   };
 
-  handleSubmit = async () => {
-    const { inputValue } = this.state;
-    this.loadData(inputValue);
+  const openInfo = (charNumber: number) => {
+    setSearchParams(`page=${frontPage}&details=${charNumber}`);
   };
 
-  render() {
-    const { hasError } = this.props;
-    const { inputValue, charList, loading } = this.state;
-    const mainClass = loading ? `${styles.main} ${styles.main__loading}` : styles.main;
+  const closeInfo = () => {
+    setSearchParams(`page=${frontPage}`);
+  };
 
-    return (
-      <main className={mainClass}>
-        <div className={styles.wrapper}>
-          {loading ? (
-            <Spinner />
-          ) : (
-            <div className={styles.container}>
-              <Search
-                value={inputValue}
-                onSearchChange={this.handleSearchInputChange}
-                handleSubmit={this.handleSubmit}
-              />
-              <ErrorBoundary>
-                <CharList hasError={hasError} data={charList} />
-              </ErrorBoundary>
+  const onRequest = async (value: string, page: number) => {
+    getAllCharacters(value, page).then((res) => {
+      setCharList(res.results);
+      setTotalCount(res.count);
+      setProcess('confirmed');
+    });
+    closeInfo();
+  };
+
+  const handleSubmit = async () => {
+    onRequest(inputValue, 1);
+    setSearchParams('page=1');
+  };
+
+  const onPageChange = (value: number) => {
+    setSearchParams(`page=${value}`);
+  };
+
+  useEffect(() => {
+    const totalPageCount = Math.ceil(totalCount / 10);
+
+    if (inputValue !== '' && totalPageCount < Number(frontPage)) {
+      onRequest(inputValue, 1);
+      setSearchParams('page=1');
+    } else {
+      onRequest(inputValue, frontPage);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frontPage]);
+
+  const elements = useMemo(
+    () =>
+      setContent(
+        process,
+        <>
+          <ErrorBoundary>
+            <div className={styles.leftColumn}>
+              <SearchInput value={inputValue} onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
+              <CharList data={charList} openInfo={openInfo} />
+              <Pagination totalCount={totalCount} currentPage={Number(frontPage)} onPageChange={onPageChange} />
+              {charId && <div className={styles.backdrop} onClick={closeInfo} role="button" tabIndex={0} />}
             </div>
-          )}
-        </div>
-      </main>
-    );
-  }
-}
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <Outlet context={{ frontPage, charId, setSearchParams } satisfies ContextType} />
+          </ErrorBoundary>
+        </>,
+      ),
+    // eslint-disable-next-line
+    [process, inputValue, charId],
+  );
+
+  const wrapperClass = charId ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
+  return (
+    <main className={styles.main}>
+      <div className={styles.container}>
+        <div className={wrapperClass}>{elements}</div>
+      </div>
+    </main>
+  );
+};
 
 export default Main;

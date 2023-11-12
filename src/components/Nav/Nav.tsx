@@ -1,6 +1,4 @@
-import { Component } from 'react';
-
-import { ICommonProps } from '../../types/types';
+import { Link } from 'react-router-dom';
 
 import styles from './Nav.module.scss';
 
@@ -13,23 +11,14 @@ const navLinks = [
   { label: 'Planets', href: '/' },
 ];
 
-class Nav extends Component<ICommonProps> {
-  render() {
-    const { hasError, triggerError } = this.props;
-    const btnTriggerErrorClass = hasError ? styles.error : `${styles.error} ${styles.blink}`;
-    return (
-      <nav className={styles.nav}>
-        {navLinks.map((link) => (
-          <a key={link.label} className={styles.nav__link} href={link.href}>
-            {link.label}
-          </a>
-        ))}
-        <button onClick={triggerError} className={btnTriggerErrorClass} type="button">
-          Generate Error
-        </button>
-      </nav>
-    );
-  }
-}
+const Nav: React.FC = () => (
+  <nav className={styles.nav}>
+    {navLinks.map((link) => (
+      <Link key={link.label} className={styles.nav__link} to={link.href}>
+        {link.label}
+      </Link>
+    ))}
+  </nav>
+);
 
 export default Nav;
