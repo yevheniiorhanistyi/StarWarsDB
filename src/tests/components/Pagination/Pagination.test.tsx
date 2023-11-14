@@ -14,7 +14,7 @@ const renderComponent = (currentPage: number, totalCount: number) =>
         setTotalCount: () => {},
       }}
     >
-      <Pagination onPageChange={mockOnPageChange} currentPage={currentPage} />
+      <Pagination perPage={5} onPerPageChange={vi.fn()} onPageChange={mockOnPageChange} currentPage={currentPage} />
     </CharListDataContext.Provider>,
   );
 
@@ -27,7 +27,7 @@ describe('Pagination', () => {
   it('renders correct number of buttons', () => {
     const { getAllByRole } = renderComponent(1, 60);
     const buttons = getAllByRole('button');
-    expect(buttons.length).toBe(8);
+    expect(buttons.length).toBe(10);
   });
 
   it('calls onPageChange when a button is clicked', () => {

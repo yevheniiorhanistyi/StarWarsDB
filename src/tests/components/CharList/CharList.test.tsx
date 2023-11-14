@@ -17,7 +17,7 @@ const renderComponent = (charListData: ICharData[] | []) =>
         setTotalCount: () => {},
       }}
     >
-      <CharList openInfo={mockOpenInfo} />
+      <CharList perPage={5} openInfo={mockOpenInfo} />
     </CharListDataContext.Provider>,
   );
 
