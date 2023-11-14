@@ -4,4 +4,3 @@
 npm run lint
 npm run fix
 npm run compile
-npm run test

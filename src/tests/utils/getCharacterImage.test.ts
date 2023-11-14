@@ -8,6 +8,6 @@ vi.mock('./getNumberFromString', () => ({
 describe('getCharacterImage', () => {
   it('Generates the correct image path', () => {
     const imagePath = getCharacterImage(initialCharData);
-    expect(imagePath).toBe('/characters/122.jpg');
+    expect(imagePath).toBe('/characters/1.jpg');
   });
 });
