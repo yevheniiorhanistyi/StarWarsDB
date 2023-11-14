@@ -4,10 +4,9 @@ import { getCharacterImage, getNumberFromString } from '../../utils';
 
 import styles from './CharList.module.scss';
 
-const CharList: React.FC<ICharListProps> = ({ openInfo }) => {
+const CharList: React.FC<ICharListProps> = ({ perPage, openInfo }) => {
   const { charListData } = useCharListData();
   const noResultsImage = '/fighter.png';
-
   const onOpenInfo = (char: ICharData) => {
     const number = getNumberFromString(char.url);
     openInfo(number);
@@ -23,7 +22,7 @@ const CharList: React.FC<ICharListProps> = ({ openInfo }) => {
   }
   return (
     <ul className={styles.char__list}>
-      {charListData.map((char) => (
+      {charListData.slice(0, perPage).map((char) => (
         <li key={char.name} className={styles.char__item}>
           <button
             className={styles.char__button}

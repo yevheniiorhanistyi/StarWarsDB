@@ -15,6 +15,7 @@ export interface ISearchInputProps {
 }
 
 export interface ICharListProps {
+  perPage: number;
   openInfo: (charNumber: number) => void;
 }
 
@@ -58,6 +59,8 @@ export interface IUsePaginationProps {
 
 export interface IPaginationProps {
   currentPage: number;
+  perPage: number;
+  onPerPageChange: (value: number) => void;
   onPageChange: (value: number) => void;
 }
 

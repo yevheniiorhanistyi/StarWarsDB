@@ -1,5 +1,6 @@
 .wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -56,4 +57,19 @@
 .active {
   color: #000;
   background-color: #fff;
+}
+
+.select {
+  padding: 0 10px;
+  margin: 5px 0;
+
+  span {
+    font-weight: 700;
+    color: #fff;
+    margin-right: 5px;
+
+    @media (max-width: '520px') {
+      font-size: 0.7rem;
+    }
+  }
 }

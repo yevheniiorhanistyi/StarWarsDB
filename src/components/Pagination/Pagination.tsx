@@ -4,12 +4,14 @@ import { IPaginationProps } from '../../types/types';
 
 import styles from './Pagination.module.scss';
 
-const Pagination: React.FC<IPaginationProps> = ({ onPageChange, currentPage }) => {
+const Pagination: React.FC<IPaginationProps> = ({ onPageChange, currentPage, perPage, onPerPageChange }) => {
   const { totalCount } = useCharListData();
   const paginationRange = usePagination({
     currentPage,
     totalCount,
   });
+
+  const options = [5, 10];
 
   if (paginationRange.length < 1) {
     return null;
@@ -56,6 +58,21 @@ const Pagination: React.FC<IPaginationProps> = ({ onPageChange, currentPage }) =
       <button onClick={onNext} disabled={currentPage === lastPage} className={styles.button} type="button">
         &#62;
       </button>
+      {totalCount >= 10 && (
+        <div className={styles.select}>
+          <span>Items per page:</span>
+          {options.map((option) => (
+            <button
+              className={option === perPage ? `${styles.button} ${styles.active}` : styles.button}
+              key={option}
+              onClick={() => onPerPageChange(option)}
+              type="button"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

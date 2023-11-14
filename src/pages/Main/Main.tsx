@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import useApiService from '../../services/apiService';
 import styles from './Main.module.scss';
 
 const Main: React.FC = () => {
+  const [perPage, setPerPage] = useState(10);
   const { inputValue, setInputValue } = useSearchInput();
   const { totalCount, setCharListData, setTotalCount } = useCharListData();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,6 +57,10 @@ const Main: React.FC = () => {
     setSearchParams(`page=${value}`);
   };
 
+  const onPerPageChange = (value: number) => {
+    setPerPage(value);
+  };
+
   useEffect(() => {
     const totalPageCount = Math.ceil(totalCount / 10);
 
@@ -67,7 +72,7 @@ const Main: React.FC = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frontPage]);
+  }, [frontPage, perPage]);
 
   const elements = useMemo(
     () =>
@@ -77,8 +82,13 @@ const Main: React.FC = () => {
           <ErrorBoundary>
             <div className={styles.leftColumn}>
               <SearchInput onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
-              <CharList openInfo={openInfo} />
-              <Pagination currentPage={Number(frontPage)} onPageChange={onPageChange} />
+              <CharList perPage={perPage} openInfo={openInfo} />
+              <Pagination
+                currentPage={Number(frontPage)}
+                perPage={perPage}
+                onPerPageChange={onPerPageChange}
+                onPageChange={onPageChange}
+              />
               {charId && (
                 <div
                   className={styles.backdrop}
@@ -96,7 +106,7 @@ const Main: React.FC = () => {
         </>,
       ),
     // eslint-disable-next-line
-    [process, inputValue, charId],
+    [process, inputValue, charId, perPage],
   );
 
   const wrapperClass = charId ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
