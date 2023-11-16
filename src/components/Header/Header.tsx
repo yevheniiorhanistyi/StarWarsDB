@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Nav from '../Nav/Nav';
 
 import styles from './Header.module.scss';
@@ -8,9 +10,9 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.outerBox}>
-          <a href="/">
+          <Link to="/">
             <img className={styles.header__logo} src={logo} alt="Star Wars" />
-          </a>
+          </Link>
           <Nav />
         </div>
       </div>

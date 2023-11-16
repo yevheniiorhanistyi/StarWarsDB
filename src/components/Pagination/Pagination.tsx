@@ -1,9 +1,11 @@
 import { usePagination, DOTS } from '../../hooks/usePagination';
+import { useCharListData } from '../CharListDataProvider/CharListDataProvider';
 import { IPaginationProps } from '../../types/types';
 
 import styles from './Pagination.module.scss';
 
-const Pagination: React.FC<IPaginationProps> = ({ onPageChange, totalCount, currentPage }) => {
+const Pagination: React.FC<IPaginationProps> = ({ onPageChange, currentPage }) => {
+  const { totalCount } = useCharListData();
   const paginationRange = usePagination({
     currentPage,
     totalCount,

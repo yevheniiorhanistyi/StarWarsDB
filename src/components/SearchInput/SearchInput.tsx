@@ -1,13 +1,15 @@
 import { ChangeEvent } from 'react';
 
+import { useSearchInput } from '../SearchInputProvider/SearchInputProvider';
 import { ISearchInputProps } from '../../types/types';
 
 import styles from './SearchInput.module.scss';
 
-const SearchInput: React.FC<ISearchInputProps> = ({ value, handleSubmit, onSearchChange }) => {
+const SearchInput: React.FC<ISearchInputProps> = ({ handleSubmit, onSearchChange }) => {
+  const { inputValue } = useSearchInput();
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    onSearchChange(inputValue);
+    const { value } = e.target;
+    onSearchChange(value);
   };
 
   const onSubmit = (event: { preventDefault: () => void }) => {
@@ -22,10 +24,10 @@ const SearchInput: React.FC<ISearchInputProps> = ({ value, handleSubmit, onSearc
           type="text"
           className={styles.search__input}
           placeholder="Type to search"
-          value={value}
+          value={inputValue}
           onChange={handleInputChange}
         />
-        <button type="submit" className={styles.search__icon}>
+        <button type="submit" name="submit" className={styles.search__icon}>
           <span className={styles.search__span} />
         </button>
       </div>

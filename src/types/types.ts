@@ -10,13 +10,11 @@ export interface State {
 }
 
 export interface ISearchInputProps {
-  value: string;
   onSearchChange: (newValue: string) => void;
   handleSubmit: () => void;
 }
 
 export interface ICharListProps {
-  data: ICharData[] | [];
   openInfo: (charNumber: number) => void;
 }
 
@@ -59,7 +57,6 @@ export interface IUsePaginationProps {
 }
 
 export interface IPaginationProps {
-  totalCount: number;
   currentPage: number;
   onPageChange: (value: number) => void;
 }
