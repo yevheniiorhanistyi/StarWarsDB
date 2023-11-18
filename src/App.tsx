@@ -1,16 +1,16 @@
 import { RouterProvider } from 'react-router-dom';
-import { CharListDataProvider } from './components/CharListDataProvider/CharListDataProvider';
-import { SearchInputProvider } from './components/SearchInputProvider/SearchInputProvider';
+import { Provider } from 'react-redux';
 
 import router from './routes/router';
+import { setupStore } from './redux/store';
+
+const store = setupStore();
 
 function App() {
   return (
-    <CharListDataProvider>
-      <SearchInputProvider>
-        <RouterProvider router={router} />
-      </SearchInputProvider>
-    </CharListDataProvider>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   );
 }
 

@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { SetURLSearchParams } from 'react-router-dom';
 
 export interface Props {
   children?: ReactNode;
@@ -10,18 +9,18 @@ export interface State {
 }
 
 export interface ISearchInputProps {
-  onSearchChange: (newValue: string) => void;
-  handleSubmit: () => void;
-}
-
-export interface ICharListProps {
-  perPage: number;
-  openInfo: (charNumber: number) => void;
+  term: string;
+  handleSubmit: (term: string) => void;
 }
 
 export interface ICharInfoProps {
   charData: ICharData;
   imgSrc: string;
+}
+
+export interface ICharListProps {
+  items: ICharData[];
+  limit: number;
 }
 
 export interface IResourceResponse {
@@ -45,8 +44,8 @@ export interface ICharData {
   species: string[];
   vehicles: string[];
   starships: string[];
-  created: Date;
-  edited: Date;
+  created: string;
+  edited: string;
   url: string;
 }
 
@@ -58,10 +57,24 @@ export interface IUsePaginationProps {
 }
 
 export interface IPaginationProps {
+  totalCount: number;
   currentPage: number;
-  perPage: number;
-  onPerPageChange: (value: number) => void;
+  limit: number;
   onPageChange: (value: number) => void;
 }
 
-export type ContextType = { frontPage: number; charId: string; setSearchParams: SetURLSearchParams };
+export type QueryParams = {
+  term: string;
+  page: number;
+};
+
+export interface CharactersSliceState {
+  item: ICharData;
+  items: ICharData[];
+  totalCount: number;
+  term: string;
+  currentPage: number;
+  limit: number;
+  isLoadingCharacters: boolean;
+  isLoadingCharacter: boolean;
+}
