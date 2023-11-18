@@ -63,7 +63,7 @@ const Main: React.FC = () => {
               <ErrorBoundary>
                 <div className={styles.leftColumn}>
                   <SearchInput term={term} handleSubmit={handleSubmit} />
-                  <CharList items={data?.results || []} limit={limit} />
+                  {data && <CharList items={data.results} limit={limit} />}
                   <Pagination
                     currentPage={currentPage}
                     totalCount={totalCount}
