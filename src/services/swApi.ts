@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { ICharData, QueryParams, IResourceResponse } from '../types/types';
+import type { ICharData, IResourceResponse, QueryParams } from '../types/types';
 
 export const swApi = createApi({
   reducerPath: 'swApi',
