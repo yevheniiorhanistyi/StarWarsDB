@@ -1,15 +1,15 @@
+import { Provider } from 'react-redux';
 import { render, fireEvent, screen } from '@testing-library/react';
 import SearchInput from '../../../components/SearchInput/SearchInput';
-import { SearchInputContext } from '../../../components/SearchInputProvider/SearchInputProvider';
+import { setupStore } from '../../../redux/store';
 
 const mockHandleSubmit = vi.fn();
-const mockOnSearchChange = vi.fn();
 
-const renderComponent = () =>
+const renderComponent = (term = '') =>
   render(
-    <SearchInputContext.Provider value={{ inputValue: 'test', setInputValue: () => {} }}>
-      <SearchInput handleSubmit={mockHandleSubmit} onSearchChange={mockOnSearchChange} />
-    </SearchInputContext.Provider>,
+    <Provider store={setupStore()}>
+      <SearchInput handleSubmit={mockHandleSubmit} term={term} />
+    </Provider>,
   );
 
 describe('SearchInput', () => {
@@ -18,17 +18,19 @@ describe('SearchInput', () => {
     expect(container).toBeInTheDocument();
   });
   it('component should access context properly', () => {
-    renderComponent();
+    renderComponent('test');
     expect(screen.getByPlaceholderText('Type to search')).toHaveValue('test');
   });
 
-  it('calls onSearchChange when input value changes', () => {
+  it('calls onSearchChange when input value changes', async () => {
     const { getByPlaceholderText } = renderComponent();
     const inputElement = getByPlaceholderText('Type to search');
+    const submitButton = screen.getByRole('button', { name: '' });
 
     fireEvent.change(inputElement, { target: { value: 'abc' } });
+    fireEvent.submit(submitButton);
 
-    expect(mockOnSearchChange).toHaveBeenCalledWith('abc');
+    expect(mockHandleSubmit).toHaveBeenCalledWith('abc');
   });
 
   it('calls handleSubmit when form is submitted', () => {

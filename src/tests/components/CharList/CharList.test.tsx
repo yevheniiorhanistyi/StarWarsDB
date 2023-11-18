@@ -1,24 +1,20 @@
+import { MemoryRouter } from 'react-router';
+import { Provider } from 'react-redux';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, vi, expect } from 'vitest';
-import { ICharData } from '../../../types/types';
-import { CharListDataContext } from '../../../components/CharListDataProvider/CharListDataProvider';
 import CharList from '../../../components/CharList/CharList';
-import { CharListData } from './CharListData';
+import { charList } from '../../../mocks/data';
+import { setupStore } from '../../../redux/store';
+import { ICharData } from '../../../types/types';
+import * as utils from '../../../utils';
 
-const mockOpenInfo = vi.fn();
-
-const renderComponent = (charListData: ICharData[] | []) =>
+const renderComponent = (items: ICharData[]) =>
   render(
-    <CharListDataContext.Provider
-      value={{
-        charListData,
-        totalCount: 0,
-        setCharListData: () => {},
-        setTotalCount: () => {},
-      }}
-    >
-      <CharList perPage={5} openInfo={mockOpenInfo} />
-    </CharListDataContext.Provider>,
+    <Provider store={setupStore()}>
+      <MemoryRouter initialEntries={['/?page=1']}>
+        <CharList items={items} limit={10} />
+      </MemoryRouter>
+    </Provider>,
   );
 
 describe('CharList', () => {
@@ -31,18 +27,19 @@ describe('CharList', () => {
     expect(noResultsImage).toBeInTheDocument();
   });
 
-  it('return the list of items', () => {
-    renderComponent(CharListData);
+  it('return the list of items', async () => {
+    renderComponent(charList);
 
-    const itemsList = screen.getByRole('list', { name: '' });
+    const itemsList = await screen.getByRole('list', { name: '' });
     expect(itemsList).toBeInTheDocument();
   });
 
   it('calls openInfo when a card is clicked', () => {
-    renderComponent(CharListData);
-    const firstCardButton = screen.getByTestId(CharListData[0].name);
+    const getNumberFromStringSpy = vi.spyOn(utils, 'getNumberFromString');
+    renderComponent(charList);
+    const firstCardButton = screen.getByTestId(charList[0].name);
 
     fireEvent.click(firstCardButton);
-    expect(mockOpenInfo).toHaveBeenCalled();
+    expect(getNumberFromStringSpy).toHaveBeenCalledWith(charList[0].url);
   });
 });

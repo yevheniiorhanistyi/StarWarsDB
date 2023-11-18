@@ -1,21 +1,15 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { CharListDataContext } from '../../../components/CharListDataProvider/CharListDataProvider';
+import { Provider } from 'react-redux';
+import { setupStore } from '../../../redux/store';
 import Pagination from '../../../components/Pagination/Pagination';
 
 const mockOnPageChange = vi.fn();
 
 const renderComponent = (currentPage: number, totalCount: number) =>
   render(
-    <CharListDataContext.Provider
-      value={{
-        charListData: [],
-        totalCount,
-        setCharListData: () => {},
-        setTotalCount: () => {},
-      }}
-    >
-      <Pagination perPage={5} onPerPageChange={vi.fn()} onPageChange={mockOnPageChange} currentPage={currentPage} />
-    </CharListDataContext.Provider>,
+    <Provider store={setupStore()}>
+      <Pagination totalCount={totalCount} limit={10} onPageChange={mockOnPageChange} currentPage={currentPage} />
+    </Provider>,
   );
 
 describe('Pagination', () => {
