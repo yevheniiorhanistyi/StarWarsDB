@@ -61,6 +61,7 @@ export interface IPaginationProps {
   currentPage: number;
   limit: number;
   onPageChange: (value: number) => void;
+  onChangeLimit: (value: number) => void;
 }
 
 export type QueryParams = {

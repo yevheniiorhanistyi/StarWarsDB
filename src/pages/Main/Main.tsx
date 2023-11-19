@@ -10,7 +10,7 @@ import CharList from '../../components/CharList/CharList';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Pagination from '../../components/Pagination/Pagination';
 
-import { setItems, setTerm, setCurrentPage, setTotalCount } from '../../redux/charactersSlice';
+import { setItems, setTerm, setCurrentPage, setTotalCount, setLimit } from '../../redux/charactersSlice';
 import { useGetAllCharacterQuery } from '../../services/swApi';
 
 import styles from './Main.module.scss';
@@ -23,7 +23,7 @@ const Main: React.FC = () => {
   const charId = searchParams.get('details') || '';
   const { term, limit, currentPage, totalCount } = useSelector((state: RootState) => state.charactersReducer);
 
-  const { data, isFetching } = useGetAllCharacterQuery({ term, page });
+  const { data, isFetching, refetch } = useGetAllCharacterQuery({ term, page });
 
   const handleSubmit = async (newValue: string) => {
     navigate('/?page=1');
@@ -34,6 +34,11 @@ const Main: React.FC = () => {
   const onPageChange = (value: number) => {
     navigate(`/?page=${value}`);
     dispatch(setCurrentPage(value));
+  };
+
+  const onChangeLimit = (option: number) => {
+    dispatch(setLimit(option));
+    refetch();
   };
 
   useEffect(() => {
@@ -69,6 +74,7 @@ const Main: React.FC = () => {
                     totalCount={totalCount}
                     limit={limit}
                     onPageChange={onPageChange}
+                    onChangeLimit={onChangeLimit}
                   />
                   {charId && (
                     <div
