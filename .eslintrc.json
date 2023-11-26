@@ -1,30 +1,31 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
   },
   "extends": [
     "airbnb",
     "airbnb-typescript",
-    "airbnb/hooks",
-    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:@next/next/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "project": "./tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module",
-    "project": "./tsconfig.json"
+    "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["react", "prettier"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   "rules": {
     "react/function-component-definition": [
       "error",
@@ -34,10 +35,7 @@
           "function-expression",
           "arrow-function"
         ],
-        "unnamedComponents": [
-          "function-expression",
-          "arrow-function"
-        ]
+        "unnamedComponents": ["function-expression", "arrow-function"]
       }
     ],
     "import/no-extraneous-dependencies": "off",
@@ -48,14 +46,17 @@
     "react/prop-types": "off",
     "react/jsx-no-bind": "off",
     "react/prefer-stateless-function": "off",
-    "class-methods-use-this": "off",
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    ],
     "no-param-reassign": [
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsFor": [
-          "state"
-        ]
+        "ignorePropertyModificationsFor": ["state"]
       }
     ]
   }
