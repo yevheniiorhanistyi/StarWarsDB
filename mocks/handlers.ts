@@ -1,11 +1,11 @@
 import { http, HttpResponse } from "msw";
-import { char, charList } from "./data";
+import { item, itemList } from "./data";
 
 export const handlers = [
   http.get("https://swapi.dev/api/people/1", () =>
-    HttpResponse.json(char, { status: 200 }),
+    HttpResponse.json(item, { status: 200 }),
   ),
-  http.get("https://swapi.dev/api/people/*", () => HttpResponse.json(charList)),
+  http.get("https://swapi.dev/api/people/*", () => HttpResponse.json(itemList)),
 ];
 
 export default handlers;
