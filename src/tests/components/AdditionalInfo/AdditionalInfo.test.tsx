@@ -1,20 +1,26 @@
+import { MemoryRouter } from 'react-router';
+import { Provider } from 'react-redux';
 import { render, screen, fireEvent } from '@testing-library/react';
 import AdditionalInfo from '../../../components/AdditionalInfo/AdditionalInfo';
-import { RenderRouteWithOutletContext } from './RenderRouteWithOutletContext';
+import { setupStore } from '../../../redux/store';
 
-const mockSetSearchParams = vi.fn();
+const navigate = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as object;
+  return {
+    ...actual,
+    useNavigate: () => navigate,
+  };
+});
 
 const renderComponent = (charId: string) =>
   render(
-    <RenderRouteWithOutletContext
-      context={{
-        frontPage: 1,
-        charId,
-        setSearchParams: mockSetSearchParams,
-      }}
-    >
-      <AdditionalInfo />
-    </RenderRouteWithOutletContext>,
+    <Provider store={setupStore()}>
+      <MemoryRouter initialEntries={[`/?page=1&details=${charId}`]}>
+        <AdditionalInfo />
+      </MemoryRouter>
+    </Provider>,
   );
 
 describe('CharList', () => {
@@ -38,6 +44,6 @@ describe('CharList', () => {
     renderComponent('1');
     const button = await screen.findByText('Close');
     fireEvent.click(button);
-    expect(mockSetSearchParams).toHaveBeenCalledWith('page=1');
+    expect(navigate).toHaveBeenCalledWith(`/?page=1`);
   });
 });

@@ -1,7 +1,7 @@
 export const char = {
   birth_year: '19BBY',
-  created: new Date(),
-  edited: new Date(),
+  created: '',
+  edited: '',
   eye_color: 'blue',
   gender: 'male',
   hair_color: 'blond',
@@ -20,8 +20,8 @@ export const char = {
 export const charList = [
   {
     birth_year: '19BBY',
-    created: new Date(),
-    edited: new Date(),
+    created: '',
+    edited: '',
     eye_color: 'blue',
     gender: 'male',
     hair_color: 'blond',
@@ -38,8 +38,8 @@ export const charList = [
   },
   {
     birth_year: '33BBY',
-    created: new Date(),
-    edited: new Date(),
+    created: '',
+    edited: '',
     eye_color: 'red',
     films: [],
     gender: 'n/a',
@@ -56,8 +56,8 @@ export const charList = [
   },
   {
     birth_year: '41.9BBY',
-    created: new Date(),
-    edited: new Date(),
+    created: '',
+    edited: '',
     eye_color: 'yellow',
     films: [],
     gender: 'male',

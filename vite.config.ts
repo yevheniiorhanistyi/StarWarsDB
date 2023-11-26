@@ -12,6 +12,7 @@ export default defineConfig({
       all: true,
       provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
+      exclude: ['src/index.tsx', 'src/types/*.ts'],
     },
   },
   build: {

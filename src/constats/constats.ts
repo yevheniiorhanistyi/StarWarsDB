@@ -14,8 +14,8 @@ export const initialCharData: ICharData = {
   species: [],
   vehicles: [],
   starships: [],
-  created: new Date(),
-  edited: new Date(),
+  created: '',
+  edited: '',
   url: '/api/people/1/',
 };
 

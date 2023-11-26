@@ -49,6 +49,14 @@
     "react/jsx-no-bind": "off",
     "react/prefer-stateless-function": "off",
     "class-methods-use-this": "off",
-    "no-console": "off"
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": [
+          "state"
+        ]
+      }
+    ]
   }
 }

@@ -1,109 +1,98 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
 
-import { ContextType } from '../../types/types';
-import { useCharListData } from '../../components/CharListDataProvider/CharListDataProvider';
-import { useSearchInput } from '../../components/SearchInputProvider/SearchInputProvider';
-import { saveToLocalStorage, setContent } from '../../utils';
-
+import Spinner from '../../components/Spinner/Spinner';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CharList from '../../components/CharList/CharList';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Pagination from '../../components/Pagination/Pagination';
 
-import useApiService from '../../services/apiService';
+import { setItems, setTerm, setCurrentPage, setTotalCount, setLimit } from '../../redux/charactersSlice';
+import { useGetAllCharacterQuery } from '../../services/swApi';
 
 import styles from './Main.module.scss';
 
 const Main: React.FC = () => {
-  const { inputValue, setInputValue } = useSearchInput();
-  const { totalCount, setCharListData, setTotalCount } = useCharListData();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const frontPage = parseInt(searchParams.get('page') || '1', 10);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '1', 10);
   const charId = searchParams.get('details') || '';
+  const { term, limit, currentPage, totalCount } = useSelector((state: RootState) => state.charactersReducer);
 
-  const { getAllCharacters, process, setProcess } = useApiService();
+  const { data, isFetching, refetch } = useGetAllCharacterQuery({ term, page });
 
-  const handleSearchInputChange = (newValue: string) => {
-    setInputValue(newValue);
-    saveToLocalStorage('searchValue', newValue);
-  };
-
-  const openInfo = (charNumber: number) => {
-    setSearchParams(`page=${frontPage}&details=${charNumber}`);
-  };
-
-  const closeInfo = () => {
-    setSearchParams(`page=${frontPage}`);
-  };
-
-  const onRequest = async (value: string, page: number) => {
-    getAllCharacters(value, page).then((res) => {
-      setCharListData(res.results);
-      setTotalCount(res.count);
-      setProcess('confirmed');
-    });
-    closeInfo();
-  };
-
-  const handleSubmit = async () => {
-    onRequest(inputValue, 1);
-    setSearchParams('page=1');
+  const handleSubmit = async (newValue: string) => {
+    navigate('/?page=1');
+    dispatch(setTerm(newValue));
+    dispatch(setCurrentPage(1));
   };
 
   const onPageChange = (value: number) => {
-    setSearchParams(`page=${value}`);
+    navigate(`/?page=${value}`);
+    dispatch(setCurrentPage(value));
+  };
+
+  const onChangeLimit = (option: number) => {
+    dispatch(setLimit(option));
+    refetch();
   };
 
   useEffect(() => {
-    const totalPageCount = Math.ceil(totalCount / 10);
+    if (data) {
+      const totalPageCount = Math.ceil(data.count / 10);
 
-    if (inputValue !== '' && totalPageCount < Number(frontPage)) {
-      onRequest(inputValue, 1);
-      setSearchParams('page=1');
-    } else {
-      onRequest(inputValue, frontPage);
+      if (term !== '' && totalPageCount < Number(page)) navigate('/?page=1');
+      const { results, count } = data;
+      dispatch(setItems(results));
+      dispatch(setTotalCount(count));
+      dispatch(setCurrentPage(page));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frontPage]);
-
-  const elements = useMemo(
-    () =>
-      setContent(
-        process,
-        <>
-          <ErrorBoundary>
-            <div className={styles.leftColumn}>
-              <SearchInput onSearchChange={handleSearchInputChange} handleSubmit={handleSubmit} />
-              <CharList openInfo={openInfo} />
-              <Pagination currentPage={Number(frontPage)} onPageChange={onPageChange} />
-              {charId && (
-                <div
-                  className={styles.backdrop}
-                  onClick={closeInfo}
-                  role="button"
-                  tabIndex={0}
-                  data-testid="backdrop"
-                />
-              )}
-            </div>
-          </ErrorBoundary>
-          <ErrorBoundary>
-            <Outlet context={{ frontPage, charId, setSearchParams } satisfies ContextType} />
-          </ErrorBoundary>
-        </>,
-      ),
-    // eslint-disable-next-line
-    [process, inputValue, charId],
-  );
+  }, [page, data, limit]);
 
   const wrapperClass = charId ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <div className={wrapperClass}>{elements}</div>
+        <div className={wrapperClass}>
+          {isFetching ? (
+            <Spinner />
+          ) : (
+            <>
+              <ErrorBoundary>
+                <div className={styles.leftColumn}>
+                  <SearchInput term={term} handleSubmit={handleSubmit} />
+                  {data && <CharList items={data.results} limit={limit} />}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalCount={totalCount}
+                    limit={limit}
+                    onPageChange={onPageChange}
+                    onChangeLimit={onChangeLimit}
+                  />
+                  {charId && (
+                    <div
+                      className={styles.backdrop}
+                      onClick={() => navigate(`/?page=${page}`)}
+                      role="button"
+                      tabIndex={0}
+                      data-testid="backdrop"
+                    />
+                  )}
+                </div>
+              </ErrorBoundary>
+              <ErrorBoundary>
+                <Outlet />
+              </ErrorBoundary>
+            </>
+          )}
+        </div>
       </div>
     </main>
   );

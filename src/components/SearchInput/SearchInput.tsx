@@ -1,20 +1,20 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 
-import { useSearchInput } from '../SearchInputProvider/SearchInputProvider';
 import { ISearchInputProps } from '../../types/types';
 
 import styles from './SearchInput.module.scss';
 
-const SearchInput: React.FC<ISearchInputProps> = ({ handleSubmit, onSearchChange }) => {
-  const { inputValue } = useSearchInput();
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+const SearchInput: React.FC<ISearchInputProps> = ({ term, handleSubmit }) => {
+  const [inputValue, setInputValue] = useState(term);
+
+  const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    onSearchChange(value);
+    setInputValue(value);
   };
 
   const onSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    handleSubmit();
+    handleSubmit(inputValue);
   };
 
   return (
@@ -25,7 +25,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({ handleSubmit, onSearchChange
           className={styles.search__input}
           placeholder="Type to search"
           value={inputValue}
-          onChange={handleInputChange}
+          onChange={onSearchChange}
         />
         <button type="submit" name="submit" className={styles.search__icon}>
           <span className={styles.search__span} />

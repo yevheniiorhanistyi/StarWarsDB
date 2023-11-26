@@ -1,21 +1,22 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { CharListDataContext } from '../../../components/CharListDataProvider/CharListDataProvider';
+import { Provider } from 'react-redux';
+import { setupStore } from '../../../redux/store';
 import Pagination from '../../../components/Pagination/Pagination';
 
 const mockOnPageChange = vi.fn();
+const mockOnChangeLimit = vi.fn();
 
 const renderComponent = (currentPage: number, totalCount: number) =>
   render(
-    <CharListDataContext.Provider
-      value={{
-        charListData: [],
-        totalCount,
-        setCharListData: () => {},
-        setTotalCount: () => {},
-      }}
-    >
-      <Pagination onPageChange={mockOnPageChange} currentPage={currentPage} />
-    </CharListDataContext.Provider>,
+    <Provider store={setupStore()}>
+      <Pagination
+        totalCount={totalCount}
+        limit={10}
+        onPageChange={mockOnPageChange}
+        currentPage={currentPage}
+        onChangeLimit={mockOnChangeLimit}
+      />
+    </Provider>,
   );
 
 describe('Pagination', () => {
@@ -27,7 +28,7 @@ describe('Pagination', () => {
   it('renders correct number of buttons', () => {
     const { getAllByRole } = renderComponent(1, 60);
     const buttons = getAllByRole('button');
-    expect(buttons.length).toBe(8);
+    expect(buttons.length).toBe(10);
   });
 
   it('calls onPageChange when a button is clicked', () => {
@@ -69,5 +70,11 @@ describe('Pagination', () => {
     const { queryByRole } = renderComponent(1, 0);
     const buttons = queryByRole('button');
     expect(buttons).toBeNull();
+  });
+  it('calls onChangeLimit when a limit button is clicked', () => {
+    const { getByText } = renderComponent(1, 10);
+    const limitButton = getByText('5');
+    fireEvent.click(limitButton);
+    expect(mockOnChangeLimit).toHaveBeenCalledWith(5);
   });
 });

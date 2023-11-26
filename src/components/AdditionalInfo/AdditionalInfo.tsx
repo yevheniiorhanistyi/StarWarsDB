@@ -1,66 +1,57 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
-import { initialCharData } from '../../constats/constats';
-import { ICharData, ContextType } from '../../types/types';
-import { getCharacterImage, setContent } from '../../utils';
-
-import useApiService from '../../services/apiService';
+import { setItem } from '../../redux/charactersSlice';
+import { getCharacterImage } from '../../utils';
+import { useGetCharacterQuery } from '../../services/swApi';
+import Spinner from '../Spinner/Spinner';
 
 import styles from './AdditionalInfo.module.scss';
 
 const AdditionalInfo: React.FC = () => {
-  const [charData, setCharData] = useState<ICharData>(initialCharData);
-  const { frontPage, charId, setSearchParams } = useOutletContext<ContextType>();
-  const { getCharacter, process, setProcess } = useApiService();
-
-  const onRequest = async (value: string) => {
-    if (value.length > 0) {
-      getCharacter(value).then((res) => {
-        setCharData(res);
-        setProcess('confirmed');
-      });
-    }
-  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const charId = searchParams.get('details') || '';
+  const { data, isFetching } = useGetCharacterQuery(charId);
 
   useEffect(() => {
-    onRequest(charId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [charId]);
+    if (data) dispatch(setItem(data));
+  }, [data, dispatch]);
 
   const handleCloseInfo = () => {
-    setSearchParams(`page=${frontPage}`);
+    navigate(`/?page=${page}`);
   };
 
-  const elements = useMemo(
-    () =>
-      setContent(
-        process,
+  if (!charId) return null;
+
+  if (isFetching) return <Spinner />;
+
+  return (
+    <div>
+      {data && (
         <div className={styles.wrapper}>
           <div className={styles.item}>
-            <img className={styles.item__img} src={getCharacterImage(charData)} alt={charData.name} />
+            <img className={styles.item__img} src={getCharacterImage(data)} alt={data.name} />
             <div className={styles.item__description}>
-              <h4 className={styles.item__title}>{charData.name}</h4>
-              <p className={styles.item__attribute}>{`Height: ${charData.height}`}</p>
-              <p className={styles.item__attribute}>{`Weigth: ${charData.mass}`}</p>
-              <p className={styles.item__attribute}>{`Hair Color: ${charData.hair_color}`}</p>
-              <p className={styles.item__attribute}>{`Skin Color: ${charData.skin_color}`}</p>
-              <p className={styles.item__attribute}>{`Eye Color: ${charData.eye_color}`}</p>
-              <p className={styles.item__attribute}>{`Gender: ${charData.gender}`}</p>
+              <h4 className={styles.item__title}>{data.name}</h4>
+              <p className={styles.item__attribute}>{`Height: ${data.height}`}</p>
+              <p className={styles.item__attribute}>{`Weight: ${data.mass}`}</p>
+              <p className={styles.item__attribute}>{`Hair Color: ${data.hair_color}`}</p>
+              <p className={styles.item__attribute}>{`Skin Color: ${data.skin_color}`}</p>
+              <p className={styles.item__attribute}>{`Eye Color: ${data.eye_color}`}</p>
+              <p className={styles.item__attribute}>{`Gender: ${data.gender}`}</p>
             </div>
             <button onClick={handleCloseInfo} className={styles.item__close} type="button">
               Close
             </button>
           </div>
-        </div>,
-      ),
-    // eslint-disable-next-line
-    [process],
+        </div>
+      )}
+    </div>
   );
-
-  if (!charId) return null;
-
-  return <div>{elements}</div>;
 };
 
 export default AdditionalInfo;
