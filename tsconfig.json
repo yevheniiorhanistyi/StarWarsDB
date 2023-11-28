@@ -18,13 +18,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noImplicitAny": true,
     "jsx": "react-jsx",
     "types": [
       "vitest/globals"
     ]
   },
   "include": [
-    "src"
+    "src",
+    ".eslintrc.json",
+    "vite.config.mts"
   ],
   "references": [
     {
