@@ -8,21 +8,6 @@ export interface State {
   hasError: boolean;
 }
 
-export interface ISearchInputProps {
-  term: string;
-  handleSubmit: (term: string) => void;
-}
-
-export interface ICharInfoProps {
-  charData: ICharData;
-  imgSrc: string;
-}
-
-export interface ICharListProps {
-  items: ICharData[];
-  limit: number;
-}
-
 export interface IResourceResponse {
   count: number;
   next: string | null;
@@ -56,26 +41,16 @@ export interface IUsePaginationProps {
   siblingCount?: number;
 }
 
-export interface IPaginationProps {
-  totalCount: number;
-  currentPage: number;
-  limit: number;
-  onPageChange: (value: number) => void;
-  onChangeLimit: (value: number) => void;
-}
-
 export type QueryParams = {
-  term: string;
+  search: string;
   page: number;
 };
 
 export interface CharactersSliceState {
-  item: ICharData;
-  items: ICharData[];
   totalCount: number;
-  term: string;
+  search: string;
   currentPage: number;
   limit: number;
-  isLoadingCharacters: boolean;
-  isLoadingCharacter: boolean;
 }
+
+export type ContextType = { page: number; charId: string };

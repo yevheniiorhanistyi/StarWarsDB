@@ -1,11 +1,19 @@
 import { ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 
-import { ISearchInputProps } from '../../types/types';
+import { setSearch, setCurrentPage } from '../../redux/charactersSlice';
 
 import styles from './SearchInput.module.scss';
 
-const SearchInput: React.FC<ISearchInputProps> = ({ term, handleSubmit }) => {
-  const [inputValue, setInputValue] = useState(term);
+interface ISearchInputProps {
+  search: string;
+}
+
+const SearchInput: React.FC<ISearchInputProps> = ({ search }) => {
+  const [inputValue, setInputValue] = useState(search);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -14,7 +22,9 @@ const SearchInput: React.FC<ISearchInputProps> = ({ term, handleSubmit }) => {
 
   const onSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    handleSubmit(inputValue);
+    navigate('/people?page=1');
+    dispatch(setSearch(inputValue));
+    dispatch(setCurrentPage(1));
   };
 
   return (

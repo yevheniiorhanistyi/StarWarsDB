@@ -1,17 +1,22 @@
-import { useSearchParams } from 'react-router-dom';
-import { ICharData, ICharListProps } from '../../types/types';
+import { useNavigate } from 'react-router-dom';
+import { ICharData } from '../../types/types';
 import { getCharacterImage, getNumberFromString } from '../../utils';
 
 import styles from './CharList.module.scss';
 
-const CharList: React.FC<ICharListProps> = ({ items, limit }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '1', 10);
+interface ICharListProps {
+  page: number;
+  items: ICharData[];
+  limit: number;
+}
+
+const CharList: React.FC<ICharListProps> = ({ page, items, limit }) => {
+  const navigate = useNavigate();
   const noResultsImage = '/fighter.png';
 
   const onOpenInfo = (char: ICharData) => {
     const number = getNumberFromString(char.url);
-    setSearchParams(`page=${page}&details=${number}`);
+    navigate(`/people?page=${page}&details=${number}`);
   };
 
   if (items.length === 0) {
