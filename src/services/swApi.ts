@@ -5,10 +5,10 @@ export const swApi = createApi({
   reducerPath: 'swApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api/' }),
   endpoints: (builder) => ({
-    getAllCharacter: builder.query<IResourceResponse, { term: string; page: number }>({
+    getAllCharacter: builder.query<IResourceResponse, { search: string; page: number }>({
       query: (arg: QueryParams) => {
-        const { term, page } = arg;
-        return `people/?search=${term}&page=${page}`;
+        const { search, page } = arg;
+        return `people/?search=${search}&page=${page}`;
       },
     }),
     getCharacter: builder.query<ICharData, string>({
