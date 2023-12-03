@@ -53,4 +53,30 @@ export interface CharactersSliceState {
   limit: number;
 }
 
+export interface FormData {
+  firstName: string;
+  age: number;
+  pictureFile: File;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  conditions?: boolean;
+  country: string;
+}
+
+export interface UserData {
+  id: string;
+  firstName: string;
+  age: number;
+  picture: string | null | ArrayBuffer;
+  email: string;
+  password: string;
+  conditions: boolean;
+}
+
+export interface FormDataSliceState {
+  users: UserData[];
+  countries: string[];
+}
+
 export type ContextType = { page: number; charId: string };
