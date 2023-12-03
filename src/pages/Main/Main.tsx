@@ -1,100 +1,74 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { RootState } from '../../redux/store';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import Spinner from '../../components/Spinner/Spinner';
-import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
-import CharList from '../../components/CharList/CharList';
-import SearchInput from '../../components/SearchInput/SearchInput';
-import Pagination from '../../components/Pagination/Pagination';
-
-import { setItems, setTerm, setCurrentPage, setTotalCount, setLimit } from '../../redux/charactersSlice';
-import { useGetAllCharacterQuery } from '../../services/swApi';
+import { selectFormData } from '../../redux/selectors';
+import { decodeBase64Image } from '../../utils';
 
 import styles from './Main.module.scss';
 
 const Main: React.FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const charId = searchParams.get('details') || '';
-  const { term, limit, currentPage, totalCount } = useSelector((state: RootState) => state.charactersReducer);
-
-  const { data, isFetching, refetch } = useGetAllCharacterQuery({ term, page });
-
-  const handleSubmit = async (newValue: string) => {
-    navigate('/?page=1');
-    dispatch(setTerm(newValue));
-    dispatch(setCurrentPage(1));
-  };
-
-  const onPageChange = (value: number) => {
-    navigate(`/?page=${value}`);
-    dispatch(setCurrentPage(value));
-  };
-
-  const onChangeLimit = (option: number) => {
-    dispatch(setLimit(option));
-    refetch();
-  };
+  const { users } = useSelector(selectFormData);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [decodedPictures, setDecodedPictures] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    if (data) {
-      const totalPageCount = Math.ceil(data.count / 10);
+    const decodePictures = async () => {
+      const decodedPicturesMap: { [key: string]: string } = {};
 
-      if (term !== '' && totalPageCount < Number(page)) navigate('/?page=1');
-      const { results, count } = data;
-      dispatch(setItems(results));
-      dispatch(setTotalCount(count));
-      dispatch(setCurrentPage(page));
-    }
+      await Promise.all(
+        users.map(async (user) => {
+          if (user.picture && !decodedPicturesMap[user.firstName]) {
+            const base64String = typeof user.picture === 'string' ? user.picture : '';
+            const imageUrl = await decodeBase64Image(base64String);
+            decodedPicturesMap[user.id] = imageUrl;
+          }
+        }),
+      );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, data, limit]);
+      setDecodedPictures(decodedPicturesMap);
+    };
 
-  const wrapperClass = charId ? `${styles.wrapper} ${styles.info}` : styles.wrapper;
+    decodePictures();
+  }, [users]);
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+    const timeoutId = setTimeout(() => {
+      setHighlightedIndex(-1);
+    }, 3000);
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={wrapperClass}>
-          {isFetching ? (
-            <Spinner />
-          ) : (
-            <>
-              <ErrorBoundary>
-                <div className={styles.leftColumn}>
-                  <SearchInput term={term} handleSubmit={handleSubmit} />
-                  {data && <CharList items={data.results} limit={limit} />}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalCount={totalCount}
-                    limit={limit}
-                    onPageChange={onPageChange}
-                    onChangeLimit={onChangeLimit}
-                  />
-                  {charId && (
-                    <div
-                      className={styles.backdrop}
-                      onClick={() => navigate(`/?page=${page}`)}
-                      role="button"
-                      tabIndex={0}
-                      data-testid="backdrop"
-                    />
-                  )}
-                </div>
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <Outlet />
-              </ErrorBoundary>
-            </>
-          )}
-        </div>
+    <div className={styles.wrapper}>
+      <h1 className={styles.title}>Welcome to Star Wars DB, where every fan finds their corner of the Galaxy!</h1>
+      <p className={styles.subtitle}>
+        Register to join discussions and stay updated on the latest news from a galaxy far, far away. May the Force be
+        with you!
+      </p>
+      <div className={styles.nav}>
+        <Link className={styles.link} to="/uncontrolled-form">
+          Explore the Uncontrolled Form
+        </Link>
+        <Link className={styles.link} to="/react-hook-form">
+          Discover the React Hook Form
+        </Link>
       </div>
-    </main>
+      {users
+        .slice()
+        .reverse()
+        .map((user, index) => (
+          <div key={user.firstName} className={`${styles.user} ${index === highlightedIndex ? styles.lastUser : ''}`}>
+            {decodedPictures[user.id] && <img src={decodedPictures[user.id]} alt={`User Avatar - ${user.id}`} />}
+            <p>Name: {user.firstName}</p>
+            <p>Age: {user.age}</p>
+            <p>Email: {user.email}</p>
+            <p>Password: {user.password && user.password.slice(0, 4)}...</p>
+            <p>Accept T&C: {user.conditions && 'Yes'}</p>
+          </div>
+        ))}
+    </div>
   );
 };
 
