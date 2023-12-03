@@ -16,7 +16,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/background.webp') no-repeat center;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('/background.webp') no-repeat center;
   background-size: cover;
   transform: scale(1.5);
   animation: backgroundAnimation 30s linear forwards;
