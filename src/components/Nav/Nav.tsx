@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import styles from './Nav.module.scss';
 
 const navLinks = [
-  { label: 'People', href: '/' },
-  { label: 'Films', href: '/' },
-  { label: 'Starships', href: '/' },
-  { label: 'Vehicles', href: '/' },
-  { label: 'Species', href: '/' },
-  { label: 'Planets', href: '/' },
+  { label: 'People', href: '/people' },
+  { label: 'Films', href: '#' },
+  { label: 'Starships', href: '#' },
+  { label: 'Vehicles', href: '#' },
+  { label: 'Species', href: '#' },
+  { label: 'Planets', href: '#' },
 ];
 
 const Nav: React.FC = () => (

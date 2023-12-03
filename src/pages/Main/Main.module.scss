@@ -1,78 +1,86 @@
-@import '../../scss/keyframes/keyframes.scss';
-
-.main {
-  flex: 1 0 auto;
-  width: 100%;
-  min-height: calc(100vh - 218px);
-  padding: 0 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-.main::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('/background.webp') no-repeat center;
-  background-size: cover;
-  transform: scale(1.5);
-  animation: backgroundAnimation 30s linear forwards;
-  z-index: 1;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
 .wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  column-gap: 15px;
-  justify-content: center;
-
-  @media (max-width: '910px') {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-}
-
-.leftColumn {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #fff;
+  margin-bottom: 15px;
+
+  @media (max-width: '920px') {
+    font-size: 1.4rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+}
+
+.nav {
+  display: flex;
   justify-content: space-between;
-  min-height: calc(100vh - 218px);
-  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: 20px auto;
+
+  @media (max-width: '640px') {
+    flex-direction: column;
+  }
 }
 
-.backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+.link {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #b5b7b7;
+  padding: 10px 20px;
+  margin: 0 auto 10px;
+  max-width: 400px;
+  border: none;
+  background-color: #000;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 0.2s linear,
+    color 0.2s linear,
+    transform 0.2s linear;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
-.info {
-  grid-template-columns: 1015px 370px;
+.user {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  margin: 0 auto 20px;
+  background: rgba(0, 0, 0, 0.5);
 
-  @media (max-width: 1420px) {
-    grid-template-columns: 760px 370px;
+  img {
+    width: 100%;
+    max-width: 200px;
   }
 
-  @media (max-width: 1160px) {
-    grid-template-columns: 510px 370px;
+  p {
+    color: #fff;
   }
+}
 
-  @media (max-width: 910px) {
-    grid-template-columns: 1fr;
-  }
+.lastUser {
+  border: 1px solid #fff;
 }

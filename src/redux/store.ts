@@ -2,9 +2,11 @@ import { configureStore, combineReducers, PreloadedState } from '@reduxjs/toolki
 import { swApi } from '../services/swApi';
 
 import charactersReducer from './charactersSlice';
+import formDataReducer from './formDataSlice';
 
 const rootReducer = combineReducers({
   charactersReducer,
+  formDataReducer,
   [swApi.reducerPath]: swApi.reducer,
 });
 

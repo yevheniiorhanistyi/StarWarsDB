@@ -1,13 +1,30 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+
 import { usePagination, DOTS } from '../../hooks/usePagination';
-import { IPaginationProps } from '../../types/types';
+import { setCurrentPage, setLimit } from '../../redux/charactersSlice';
 
 import styles from './Pagination.module.scss';
 
-const Pagination: React.FC<IPaginationProps> = ({ currentPage, totalCount, limit, onPageChange, onChangeLimit }) => {
+interface IPaginationProps {
+  totalCount: number;
+  currentPage: number;
+  limit: number;
+}
+
+const Pagination: React.FC<IPaginationProps> = ({ currentPage, totalCount, limit }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const paginationRange = usePagination({
     currentPage,
     totalCount,
   });
+
+  const onPageChange = (value: number) => {
+    navigate(`/people?page=${value}`);
+    dispatch(setCurrentPage(value));
+  };
 
   const options = [5, 10];
 
@@ -63,7 +80,7 @@ const Pagination: React.FC<IPaginationProps> = ({ currentPage, totalCount, limit
             <button
               className={option === limit ? `${styles.button} ${styles.active}` : styles.button}
               key={option}
-              onClick={() => onChangeLimit(option)}
+              onClick={() => dispatch(setLimit(option))}
               type="button"
             >
               {option}

@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { setItem } from '../../redux/charactersSlice';
+import { ContextType } from '../../types/types';
 import { getCharacterImage } from '../../utils';
 import { useGetCharacterQuery } from '../../services/swApi';
 import Spinner from '../Spinner/Spinner';
@@ -10,19 +8,13 @@ import Spinner from '../Spinner/Spinner';
 import styles from './AdditionalInfo.module.scss';
 
 const AdditionalInfo: React.FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const charId = searchParams.get('details') || '';
+
+  const { page, charId } = useOutletContext<ContextType>();
   const { data, isFetching } = useGetCharacterQuery(charId);
 
-  useEffect(() => {
-    if (data) dispatch(setItem(data));
-  }, [data, dispatch]);
-
   const handleCloseInfo = () => {
-    navigate(`/?page=${page}`);
+    navigate(`/people?page=${page}`);
   };
 
   if (!charId) return null;
